@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+
+# Secrets / local config
+.env
+.env.*
+
+# Pipeline outputs (generated per run)
+results/*
+!results/holder.txt
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/

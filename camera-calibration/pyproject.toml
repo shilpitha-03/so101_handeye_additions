@@ -1,0 +1,10 @@
+[project]
+name = "camera-calibration"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "lerobot[feetech]>=0.5.1",
+    "opencv-contrib-python>=4.13.0.92",
+    "scipy>=1.17.1",
+    "scipy-stubs~=1.17.1",
+]
