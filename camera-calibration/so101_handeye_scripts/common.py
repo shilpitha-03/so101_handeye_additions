@@ -112,6 +112,8 @@ class CharucoPoseResult:
     rvec: Optional[np.ndarray] = None
     tvec: Optional[np.ndarray] = None
     message: str = ""
+    n_corners: int = 0
+    reproj_px: Optional[float] = None   # RMS reprojection error of the detected corners
 
 
 # ----------------------------
@@ -174,12 +176,22 @@ def estimate_charuco_pose(image_bgr: np.ndarray, K: np.ndarray, D: np.ndarray) -
     R, _ = cv.Rodrigues(rvec)
     T = make_T(R, tvec)
 
+    reproj = None
+    try:
+        obj = np.asarray(board.getChessboardCorners(), dtype=np.float64)[charuco_ids.ravel()]
+        proj, _ = cv.projectPoints(obj, rvec, tvec, K, D)
+        reproj = float(np.sqrt(np.mean(np.sum((proj.reshape(-1, 2) - charuco_corners.reshape(-1, 2)) ** 2, axis=1))))
+    except Exception:
+        pass
+
     return CharucoPoseResult(
         True,
         T_camera_charuco=T,
         rvec=rvec,
         tvec=tvec,
         message=f"OK: {len(charuco_ids)} corners",
+        n_corners=int(len(charuco_ids)),
+        reproj_px=reproj,
     )
 
 
